@@ -32,7 +32,7 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
 
     setIsFilled(!!inputRef.current?.value);
 
-    // comentario abaixo mas
+    // linha acima é o comentario abaixo mas melhor escrito
 
     // if (inputRef.current?.value) {
     //   setIsFilled(true);
