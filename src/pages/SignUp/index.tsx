@@ -3,7 +3,7 @@ import { FiArrowLeft, FiLock, FiMail, FiUser } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
@@ -26,6 +26,7 @@ interface SignUpFormData {
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
+  const history = useHistory();
 
   const handleSubmit = useCallback(
     async (data: SignUpFormData) => {
@@ -46,18 +47,29 @@ const SignUp: React.FC = () => {
 
         await api.post('/users', data);
 
+        history.push('/');
+
         addToast({
           type: 'success',
           title: 'Cadastro realizado',
           description: 'Você já pode fazer seu logon no GoBarber!',
         });
       } catch (err) {
-        const errors = getValidationErrors(err);
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+          formRef.current?.setErrors(errors);
 
-        formRef.current?.setErrors(errors);
+          return;
+        }
+
+        addToast({
+          type: 'error',
+          title: 'Erro no cadastro',
+          description: 'Ocorreu um erro ao fazer cadastro, tente novamente.',
+        });
       }
     },
-    [addToast],
+    [addToast, history],
   );
 
   return (
