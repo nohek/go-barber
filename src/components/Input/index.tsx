@@ -65,6 +65,7 @@ const Input: React.FC<InputProps> = ({
     >
       {Icon && <Icon size={20} />}
       <input
+        autoComplete="off"
         name={name}
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
